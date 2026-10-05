@@ -39,7 +39,7 @@ public class Entry {
         return service +  " (" + username + ")";
     }
 
-    
+
 
 
 
