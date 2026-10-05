@@ -15,11 +15,10 @@ public class Entry {
         this.service = service;
         this.username = username;
         this.password = password;
-
     }
 
     public String getService() {
-        return service; // Gibt den Namen des service zurück (Who would have guessed)
+        return service; // Gibt den Namen des Dienstes zurück
     }
 
     public String getUsername(){
@@ -28,8 +27,19 @@ public class Entry {
 
     public String getPassword(){
         return password;
-
     }
+
+    /**
+     * Gibt den Eintrag als "Dienst (Benutzername)" zurück.
+     * Das Passwort steht nicht drin, weil 'toString()'
+     * automatisch aufgerufen werden kann (bei println oder in Logs) -> Passwort Leak -> Schlecht...
+     */
+    @Override
+    public String toString(){
+        return service +  " (" + username + ")";
+    }
+
+    
 
 
 
