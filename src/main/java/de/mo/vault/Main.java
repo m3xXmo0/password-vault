@@ -1,5 +1,7 @@
 package de.mo.vault;
 
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Scanner;
@@ -7,10 +9,11 @@ import java.util.Scanner;
 public class Main {
 
 
-    public static void main (String[] args) throws IOException {
+    public static void main (String[] args) throws Exception {
 
         Path file = Path.of("vault.txt");
-        Vault vault = VaultStorage.load(file);
+        SecretKey key = new SecretKeySpec(new byte[32], "AES");   // Testschlüssel, nur Nullen!
+        Vault vault = VaultStorage.load(file, key);
         Scanner scanner = new Scanner(System.in);
 
         boolean running = true;
@@ -33,13 +36,13 @@ public class Main {
                     System.out.print("Dienst: ");
                     String service = scanner.nextLine();
 
-                    System.out.println("Benutzername: ");
+                    System.out.print("Benutzername: ");
                     String username = scanner.nextLine();
 
-                    System.out.println("Passwort: ");
+                    System.out.print("Passwort: ");
                     String password = scanner.nextLine();
                     vault.add(new Entry(service, username, password ));
-                    VaultStorage.save(vault, file);
+                    VaultStorage.save(vault, file, key);
                     System.out.println("Eintrag gespeichert");
                     break;
 
@@ -47,7 +50,7 @@ public class Main {
                     System.out.print("Dienst, der gelöscht werden soll: ");
                     String serviceDelete = scanner.nextLine();
                     if(vault.removeByService(serviceDelete)){
-                        VaultStorage.save(vault, file);
+                        VaultStorage.save(vault, file, key);
                         System.out.println("Dienst gelöscht");
                     } else {
                         System.out.println("Nicht gefunden");

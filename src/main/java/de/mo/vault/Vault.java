@@ -1,6 +1,8 @@
+
 package de.mo.vault;
 import java.util.ArrayList;
 import java.util.List;
+
 
 /** Vault ist die Klasse, die Einträge des Passwort-Tresors
  * verwaltet. (Hinzufügen, abrufen, auflisten, löschen)
@@ -21,6 +23,7 @@ public class Vault {
     /**
      * Gibt alle Einträge des Tresors zurück
      */
+
     public List<Entry> getEntries() {
         return List.copyOf(entries);
     }
