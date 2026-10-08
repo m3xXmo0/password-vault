@@ -46,10 +46,17 @@ public class Main {
                     System.out.print("Benutzername: ");
                     String username = scanner.nextLine();
 
-                    System.out.print("Passwort: ");
+                    System.out.print("Passwort (oder g für generieren): ");
                     String password = scanner.nextLine();
+
+                    if (password.equals("g")) {
+                        password = PasswordGenerator.generate(16);
+                        System.out.println("Generiert: " + password);
+                    }
+
                     vault.add(new Entry(service, username, password ));
                     VaultStorage.save(vault, file, masterPassword);
+
                     System.out.println("Eintrag gespeichert");
                     break;
 
