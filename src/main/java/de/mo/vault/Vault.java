@@ -9,18 +9,33 @@ import java.util.List;
 public class Vault {
     private final List<Entry> entries;
 
-    public Vault(){
+    public Vault() {
         this.entries = new ArrayList<>();
     }
 
     // Fügt einen Eintrag zum Tresor hinzu
-    public void add(Entry entry){
+    public void add(Entry entry) {
         entries.add(entry);
     }
+
     /**
      * Gibt alle Einträge des Tresors zurück
      */
-    public List<Entry> getEntries(){
+    public List<Entry> getEntries() {
         return List.copyOf(entries);
     }
+
+    // Sucht den ersten Eintrag mit dem angegebenen Dienstnamen
+    // Gibt null zurück, wenn es keinen solchen Eintrag gibt
+
+    public Entry findByService(String service) {
+        for (Entry entry : entries) {
+            if (entry.getService().equals(service)) {
+                return entry;
+            }
+        }
+        return null;
+
+    }
 }
+

@@ -10,8 +10,10 @@ public class Main {
         for (Entry entry : vault.getEntries()){
             System.out.println(entry);
         }
-        vault.getEntries().clear();
-        System.out.println(vault.getEntries().size());
+        Entry found = vault.findByService("GitHub");
+        System.out.println(found);
+        System.out.println(vault.findByService("Spotify"));
     }
+
 
 }
