@@ -1,6 +1,7 @@
 package de.mo.vault;
 
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -29,7 +30,8 @@ public class Main {
             System.out.println("1) Alle Einträge anzeigen");
             System.out.println("2) Eintrag Hinzufügen");
             System.out.println("3) Eintrag löschen");
-            System.out.println("4) Beenden");;
+            System.out.println("4) Master-Passwort ändern");
+            System.out.println("5) Beenden");;
             System.out.print("Auswahl: ");
             String input = scanner.nextLine();
 
@@ -72,6 +74,26 @@ public class Main {
                     break;
 
                 case "4":
+                    System.out.print("Aktuelles Master-Passwort: ");
+                    char[] current = scanner.nextLine().toCharArray();
+                    if (!Arrays.equals(current, masterPassword)) {
+                        System.out.println("Falsches Passwort.");
+                        break;
+                    }
+                    System.out.print("Neues Master-Passwort: ");
+                    char[] newPassword = scanner.nextLine().toCharArray();
+                    System.out.print("Neues Master-Passwort wiederholen: ");
+                    char[] repeat = scanner.nextLine().toCharArray();
+                    if (newPassword.length == 0 || !Arrays.equals(newPassword, repeat)) {
+                        System.out.println("Eingaben stimmen nicht überein.");
+                        break;
+                    }
+                    VaultStorage.save(vault, file, newPassword);
+                    masterPassword = newPassword;
+                    System.out.println("Master-Passwort geändert.");
+                    break;
+
+                case "5":
                     running = false;
                     break;
 
