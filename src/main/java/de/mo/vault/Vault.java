@@ -21,6 +21,6 @@ public class Vault {
      * Gibt alle Einträge des Tresors zurück
      */
     public List<Entry> getEntries(){
-        return entries;
+        return List.copyOf(entries);
     }
 }
