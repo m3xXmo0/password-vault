@@ -1,7 +1,12 @@
 package de.mo.vault;
 
+
+import java.io.IOException;
+import java.nio.file.Path;
+
 public class Main {
-    public static void main (String[] args){
+    public static void main (String[] args) throws IOException {
+
 
         Vault vault = new Vault();
         vault.add(new Entry("Netflix", "Maxi", "passwort123"));
@@ -17,7 +22,8 @@ public class Main {
         System.out.println(vault.removeByService("Netflix"));
         System.out.println(vault.removeByService("Netflix"));
         System.out.println(vault.getEntries());
-    }
 
+        VaultStorage.save(vault, Path.of("vault.txt"));
+    }
 
 }
