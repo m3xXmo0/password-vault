@@ -13,6 +13,10 @@ public class Main {
         Entry found = vault.findByService("GitHub");
         System.out.println(found);
         System.out.println(vault.findByService("Spotify"));
+
+        System.out.println(vault.removeByService("Netflix"));
+        System.out.println(vault.removeByService("Netflix"));
+        System.out.println(vault.getEntries());
     }
 
 

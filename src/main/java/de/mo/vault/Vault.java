@@ -35,7 +35,24 @@ public class Vault {
             }
         }
         return null;
-
     }
+
+
+    //  Löscht den ersten Eintrag mit dem angegebenen Dienstnamen
+      // Gibt true zurück, wenn etwas gelöscht wurde, sonst false
+
+    public boolean removeByService(String service) {
+
+        Entry entry = findByService(service);
+        if (entry == null) {
+            return false;
+        }
+
+        entries.remove(entry);
+        return true;
+    }
+
+
+
 }
 
