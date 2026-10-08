@@ -36,6 +36,20 @@ public class CryptoService {
 
     }
 
+    public static String decrypt(byte[] data, SecretKey key) throws GeneralSecurityException {
+        byte[] nonce = new byte[NONCE_LENGTH];
+        System.arraycopy(data, 0, nonce, 0, NONCE_LENGTH);
+
+        byte[] ciphertext = new byte[data.length - NONCE_LENGTH];
+        System.arraycopy(data, NONCE_LENGTH, ciphertext, 0, ciphertext.length);
+
+        Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+        cipher.init(Cipher.DECRYPT_MODE, key, new GCMParameterSpec(TAG_LENGTH_BITS, nonce));
+        byte[] plaintext = cipher.doFinal(ciphertext);
+
+        return new String(plaintext, StandardCharsets.UTF_8);
+    }
+
 
 
 }
