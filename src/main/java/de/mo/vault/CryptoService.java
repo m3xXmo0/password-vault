@@ -2,7 +2,9 @@ package de.mo.vault;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.GCMParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
@@ -10,8 +12,8 @@ import java.security.SecureRandom;
 
 
 /**
- * Verschlüsselt und entschlüsselt Text mit AES-256-GCM.
- * Der Schlüssel wird in dieser Version noch fest vorgegeben (nur zum Lernen).
+ * Verschlüsselt und entschlüsselt Text mit AES-256-GCM
+ * Der Schlüssel wird in dieser Version noch fest vorgegeben (nur zum Lernen)
  */
 
 
@@ -48,6 +50,33 @@ public class CryptoService {
         byte[] plaintext = cipher.doFinal(ciphertext);
 
         return new String(plaintext, StandardCharsets.UTF_8);
+    }
+    private static final int SALT_LENGTH = 16;        // Bytes
+    private static final int ITERATIONS = 600_000;
+    private static final int KEY_LENGTH_BITS = 256;
+
+    /**
+     * Leitet aus Master-Passwort und Salt einen AES-Schlüssel ab (PBKDF2)
+     * Gleiches Passwort + gleiches Salt ergibt immer denselben Schlüssel
+     */
+    public static SecretKey deriveKey(char[] password, byte[] salt) throws GeneralSecurityException {
+        PBEKeySpec spec = new PBEKeySpec(password, salt, ITERATIONS, KEY_LENGTH_BITS);
+        try {
+            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+            byte[] keyBytes = factory.generateSecret(spec).getEncoded();
+            return new SecretKeySpec(keyBytes, "AES");
+        } finally {
+            spec.clearPassword();
+        }
+    }
+
+    /**
+     * Erzeugt ein neues zufälliges Salt
+     */
+    public static byte[] generateSalt() {
+        byte[] salt = new byte[SALT_LENGTH];
+        new SecureRandom().nextBytes(salt);
+        return salt;
     }
 
 
