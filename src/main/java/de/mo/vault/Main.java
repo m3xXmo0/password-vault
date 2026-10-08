@@ -3,8 +3,13 @@ package de.mo.vault;
 public class Main {
     public static void main (String[] args){
 
-        Entry entry = new Entry("Netflix", "Maxi", "Maxi1234!");
+        Vault vault = new Vault();
+        vault.add(new Entry("Netflix", "Maxi", "passwort123"));
+        vault.add(new Entry("GitHub", "m3xXmo0", "test1234"));
 
-        System.out.println(entry);
+        for (Entry entry : vault.getEntries()){
+            System.out.println(entry);
+        }
     }
+
 }

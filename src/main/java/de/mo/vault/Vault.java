@@ -17,5 +17,10 @@ public class Vault {
     public void add(Entry entry){
         entries.add(entry);
     }
-
+    /**
+     * Gibt alle Einträge des Tresors zurück
+     */
+    public List<Entry> getEntries(){
+        return entries;
+    }
 }
