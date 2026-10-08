@@ -27,4 +27,23 @@ public class VaultStorage {
         Files.write(file, lines);
     }
 
+    /**
+     * Liest den Tresor aus der Datei
+     * Existiert noch keine Datei, wird ein leerer Tresor zurückgegeben
+     */
+
+    public static Vault load(Path file) throws IOException {
+        Vault vault = new Vault();
+        if (!Files.exists(file)) {
+            return vault;
+        }
+        for (String line : Files.readAllLines(file)) {
+            String[] parts = line.split("\t");
+            if (parts.length == 3) {
+                vault.add(new Entry(parts[0], parts[1], parts[2]));
+            }
+
+        }
+        return vault;
+    }
 }
