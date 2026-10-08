@@ -51,7 +51,7 @@ public class CryptoService {
 
         return new String(plaintext, StandardCharsets.UTF_8);
     }
-    private static final int SALT_LENGTH = 16;        // Bytes
+    public static final int SALT_LENGTH = 16;        // Bytes
     private static final int ITERATIONS = 600_000;
     private static final int KEY_LENGTH_BITS = 256;
 

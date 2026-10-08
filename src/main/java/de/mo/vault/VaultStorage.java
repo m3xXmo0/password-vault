@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 
@@ -18,10 +19,10 @@ import java.util.List;
 public class VaultStorage {
 
     /**
-     * Verschlüsselt den Tresor und schreibt ihn als Base64-Text in die Datei.
-     * Pro Zeile im Klartext: Dienst, Benutzername, Passwort, getrennt durch Tabulator.
+     * Leitet aus dem Master-Passwort einen Schlüssel ab, verschlüsselt den Tresor
+     * und schreibt Salt + verschlüsselte Daten als Base64 in die Datei.
      */
-    public static void save(Vault vault, Path file, SecretKey key)
+    public static void save(Vault vault, Path file, char[] password)
             throws IOException, GeneralSecurityException {
         StringBuilder sb = new StringBuilder();
         for (Entry entry : vault.getEntries()) {
@@ -29,22 +30,33 @@ public class VaultStorage {
                     .append(entry.getUsername()).append("\t")
                     .append(entry.getPassword()).append("\n");
         }
+        byte[] salt = CryptoService.generateSalt();
+        SecretKey key = CryptoService.deriveKey(password, salt);
         byte[] encrypted = CryptoService.encrypt(sb.toString(), key);
-        Files.writeString(file, Base64.getEncoder().encodeToString(encrypted));
+
+        byte[] result = new byte[salt.length + encrypted.length];
+        System.arraycopy(salt, 0, result, 0, salt.length);
+        System.arraycopy(encrypted, 0, result, salt.length, encrypted.length);
+        Files.writeString(file, Base64.getEncoder().encodeToString(result));
     }
 
     /**
-     * Liest die Datei, entschlüsselt sie und baut den Tresor daraus auf.
+     * Liest die Datei -> trennt das Salt ab -> leitet den Schlüssel aus dem
+     * Master-Passwort ab und entschlüsselt den Tresor.
      * Existiert die Datei noch nicht, wird ein leerer Tresor zurückgegeben.
      */
-    public static Vault load(Path file, SecretKey key)
+    public static Vault load(Path file, char[] password)
             throws IOException, GeneralSecurityException {
         Vault vault = new Vault();
         if (!Files.exists(file)) {
             return vault;
         }
         byte[] data = Base64.getDecoder().decode(Files.readString(file).trim());
-        String plaintext = CryptoService.decrypt(data, key);
+        byte[] salt = Arrays.copyOfRange(data, 0, CryptoService.SALT_LENGTH);
+        byte[] encrypted = Arrays.copyOfRange(data, CryptoService.SALT_LENGTH, data.length);
+
+        SecretKey key = CryptoService.deriveKey(password, salt);
+        String plaintext = CryptoService.decrypt(encrypted, key);
         for (String line : plaintext.split("\n")) {
             String[] parts = line.split("\t");
             if (parts.length == 3) {

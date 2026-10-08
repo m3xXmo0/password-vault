@@ -12,9 +12,13 @@ public class Main {
     public static void main (String[] args) throws Exception {
 
         Path file = Path.of("vault.txt");
-        SecretKey key = new SecretKeySpec(new byte[32], "AES");   // Testschlüssel, nur Nullen!
-        Vault vault = VaultStorage.load(file, key);
         Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Master-Kennwort: ");
+        char[] masterPassword = scanner.nextLine().toCharArray();
+        Vault vault = VaultStorage.load(file, masterPassword);
+
+
 
         boolean running = true;
         while(running){
@@ -42,7 +46,7 @@ public class Main {
                     System.out.print("Passwort: ");
                     String password = scanner.nextLine();
                     vault.add(new Entry(service, username, password ));
-                    VaultStorage.save(vault, file, key);
+                    VaultStorage.save(vault, file, masterPassword);
                     System.out.println("Eintrag gespeichert");
                     break;
 
@@ -50,7 +54,7 @@ public class Main {
                     System.out.print("Dienst, der gelöscht werden soll: ");
                     String serviceDelete = scanner.nextLine();
                     if(vault.removeByService(serviceDelete)){
-                        VaultStorage.save(vault, file, key);
+                        VaultStorage.save(vault, file, masterPassword);
                         System.out.println("Dienst gelöscht");
                     } else {
                         System.out.println("Nicht gefunden");
