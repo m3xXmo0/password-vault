@@ -39,3 +39,28 @@ In der IDE Rechtsklick auf `src/test/java`, dann **Run 'All Tests'**.
 4) Master-Passwort ändern
 5) Beenden
 ```
+
+## Bedrohungsmodell
+
+### Wovor der Tresor schützt
+
+- **Diebstahl der Datei:** Wer nur `vault.txt` in die Hände bekommt, sieht
+  verschlüsselte Daten (AES-256-GCM). Ohne Master-Passwort sind sie nicht lesbar.
+- **Raten des Master-Passworts:** PBKDF2 mit 600.000 Iterationen und zufälligem
+  Salt verhindert jeden Rateversuch und macht fertige Passwort-Tabellen nutzlos.
+- **Veränderung der Datei:** GCM erkennt manipulierte Daten, das Programm
+  lehnt sie mit einer Fehlermeldung ab.
+
+### Wovor er NICHT schützt
+
+- **Schwaches Master-Passwort:** Ist es kurz oder erratbar, hilft auch PBKDF2 wenig.
+- **Schadsoftware auf dem Rechner:** Keylogger oder Speicherauslesen sehen das
+  Passwort, sobald der Tresor geöffnet ist.
+- **Sichtbare Eingabe:** Das Master-Passwort wird beim Tippen in der Konsole angezeigt.
+- **Passwörter im Arbeitsspeicher:** Einträge liegen als Java-Strings im Speicher
+  und lassen sich nicht zuverlässig löschen.
+- **Löschen oder Zurückspielen der Datei:** Ein Angreifer kann die Datei löschen
+  oder durch eine ältere Version ersetzen. GCM erkennt das nicht.
+- **Metadaten:** Dateigröße und Änderungszeitpunkt sind sichtbar.
+- **Kein Ersatz für geprüfte Software:** Das Programm wurde NICHT extern geprüft.
+
