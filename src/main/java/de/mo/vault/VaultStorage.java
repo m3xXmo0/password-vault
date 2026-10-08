@@ -1,19 +1,18 @@
 package de.mo.vault;
 
+import javax.crypto.AEADBadTagException;
 import javax.crypto.SecretKey;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.GeneralSecurityException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
-import java.util.List;
 
 
 /**
- * Speichert und lädt den Tresor in eine Textdatei
- * Version 1: unverschlüsselt, eine Zeile pro Eintrag
+ * Speichert und lädt den Tresor verschlüsselt
+ * (AES-GCM, Schlüssel aus Master-Passwort per PBKDF2)
  */
 
 public class VaultStorage {
@@ -46,23 +45,35 @@ public class VaultStorage {
      * Existiert die Datei noch nicht, wird ein leerer Tresor zurückgegeben.
      */
     public static Vault load(Path file, char[] password)
-            throws IOException, GeneralSecurityException {
+            throws IOException, VaultException {
         Vault vault = new Vault();
         if (!Files.exists(file)) {
             return vault;
         }
-        byte[] data = Base64.getDecoder().decode(Files.readString(file).trim());
-        byte[] salt = Arrays.copyOfRange(data, 0, CryptoService.SALT_LENGTH);
-        byte[] encrypted = Arrays.copyOfRange(data, CryptoService.SALT_LENGTH, data.length);
-
-        SecretKey key = CryptoService.deriveKey(password, salt);
-        String plaintext = CryptoService.decrypt(encrypted, key);
-        for (String line : plaintext.split("\n")) {
-            String[] parts = line.split("\t");
-            if (parts.length == 3) {
-                vault.add(new Entry(parts[0], parts[1], parts[2]));
+        try {
+            byte[] data = Base64.getDecoder().decode(Files.readString(file).trim());
+            if (data.length < CryptoService.SALT_LENGTH + 12 + 16) {
+                throw new VaultException("Die Tresor-Datei ist beschädigt (zu kurz)");
             }
+            byte[] salt = Arrays.copyOfRange(data, 0, CryptoService.SALT_LENGTH);
+            byte[] encrypted = Arrays.copyOfRange(data, CryptoService.SALT_LENGTH, data.length);
+
+            SecretKey key = CryptoService.deriveKey(password, salt);
+            String plaintext = CryptoService.decrypt(encrypted, key);
+            for (String line : plaintext.split("\n")) {
+                String[] parts = line.split("\t");
+                if (parts.length == 3) {
+                    vault.add(new Entry(parts[0], parts[1], parts[2]));
+                }
+            }
+        } catch (AEADBadTagException e) {
+            throw new VaultException("Falsches Master-Passwort oder manipulierte Datei");
+        } catch (IllegalArgumentException e) {
+            throw new VaultException("Die Tresor-Datei ist beschädigt (kein gültiges Base64)");
+        } catch (GeneralSecurityException e) {
+            throw new VaultException("Entschlüsselung fehlgeschlagen: " + e.getMessage());
         }
         return vault;
+
     }
 }

@@ -1,8 +1,5 @@
 package de.mo.vault;
 
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Scanner;
 
@@ -16,7 +13,13 @@ public class Main {
 
         System.out.print("Master-Kennwort: ");
         char[] masterPassword = scanner.nextLine().toCharArray();
-        Vault vault = VaultStorage.load(file, masterPassword);
+        Vault vault;
+        try {
+            vault = VaultStorage.load(file, masterPassword);
+        } catch (VaultException e) {
+            System.out.println("Fehler: " + e.getMessage());
+            return;
+        }
 
 
 
