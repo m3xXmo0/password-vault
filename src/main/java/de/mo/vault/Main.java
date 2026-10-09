@@ -28,10 +28,10 @@ public class Main {
         while(running){
             System.out.println();
             System.out.println("1) Alle Einträge anzeigen");
-            System.out.println("2) Eintrag Hinzufügen");
+            System.out.println("2) Eintrag hinzufügen");
             System.out.println("3) Eintrag löschen");
             System.out.println("4) Master-Passwort ändern");
-            System.out.println("5) Beenden");;
+            System.out.println("5) Beenden");
             System.out.print("Auswahl: ");
             String input = scanner.nextLine();
 
@@ -56,7 +56,12 @@ public class Main {
                         System.out.println("Generiert: " + password);
                     }
 
-                    vault.add(new Entry(service, username, password ));
+                    try {
+                        vault.add(new Entry(service, username, password));
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("Fehler: " + e.getMessage());
+                        break;
+                    }
                     VaultStorage.save(vault, file, masterPassword);
 
                     System.out.println("Eintrag gespeichert");

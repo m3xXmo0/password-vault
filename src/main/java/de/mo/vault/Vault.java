@@ -20,6 +20,9 @@ public class Vault {
         if (entry == null){
             throw new IllegalArgumentException("Eintrag darf nicht null sein");
         }
+        if (findByService(entry.getService()) != null) {
+            throw new IllegalArgumentException("Dienst existiert bereits: " + entry.getService());
+        }
         entries.add(entry);
     }
 

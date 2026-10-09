@@ -20,4 +20,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
             vault.add(new Entry("GitHub", "mo", "pw"));
             assertNotNull(vault.findByService("github"));
         }
+
+        @Test
+        void duplicateServiceIsRejected() {
+            Vault vault = new Vault();
+            vault.add(new Entry("GitHub", "mo", "pw"));
+            assertThrows(IllegalArgumentException.class,
+                    () -> vault.add(new Entry("github", "x", "y")));
+        }
 }
