@@ -1,5 +1,6 @@
 package de.mo.vault;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -14,6 +15,14 @@ public class Main {
 
         System.out.print("Master-Kennwort: ");
         char[] masterPassword = scanner.nextLine().toCharArray();
+        if (!Files.exists(file)) {
+            System.out.print("Master-Passwort wiederholen: ");
+            char[] confirmation = scanner.nextLine().toCharArray();
+            if (masterPassword.length == 0 || !Arrays.equals(masterPassword, confirmation)) {
+                System.out.println("Eingaben stimmen nicht überein");
+                return;
+            }
+        }
         Vault vault;
         try {
             vault = VaultStorage.load(file, masterPassword);
