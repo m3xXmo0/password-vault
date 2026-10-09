@@ -1,4 +1,5 @@
 # Password Vault
+![Build](https://github.com/m3xXmo0/password-vault/actions/workflows/build.yml/badge.svg)
 ## Deutsche Version:
 
 Ein Passwort-Tresor für die Kommandozeile (Java-only). 
