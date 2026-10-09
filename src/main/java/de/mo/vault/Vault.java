@@ -36,7 +36,7 @@ public class Vault {
 
     public Entry findByService(String service) {
         for (Entry entry : entries) {
-            if (entry.getService().equals(service)) {
+            if (entry.getService().equalsIgnoreCase(service)) {
                 return entry;
             }
         }
