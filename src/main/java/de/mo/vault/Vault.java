@@ -17,6 +17,9 @@ public class Vault {
 
     // Fügt einen Eintrag zum Tresor hinzu
     public void add(Entry entry) {
+        if (entry == null){
+            throw new IllegalArgumentException("Eintrag darf nicht null sein");
+        }
         entries.add(entry);
     }
 
