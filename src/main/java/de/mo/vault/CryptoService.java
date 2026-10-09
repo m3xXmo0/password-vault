@@ -11,15 +11,13 @@ import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
 
 
-/**
- * Verschlüsselt und entschlüsselt Text mit AES-256-GCM
- * Der Schlüssel wird in dieser Version noch fest vorgegeben (nur zum Lernen)
- */
 
+//  Verschlüsselt und entschlüsselt Text mit AES-256-GCM
 
 public class CryptoService {
 
-    private static final int NONCE_LENGTH = 12;      // Bytes
+    public static final int NONCE_LENGTH = 12;
+    public static final int TAG_LENGTH = 16;// Bytes
     private static final int TAG_LENGTH_BITS = 128;  // Länge der Manipulationsprüfung
 
     public static byte[] encrypt(String plaintext, SecretKey key) throws GeneralSecurityException{

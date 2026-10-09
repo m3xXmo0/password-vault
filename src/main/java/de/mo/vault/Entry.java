@@ -7,7 +7,7 @@ package de.mo.vault;
 public class Entry {
     private String service;   // Name des Dienstes. z.B. "GitHub"
     private String username;   // Benutzername bzw. Email für diesen Dienst
-    private String password;   // Passwort (In Version 1 noch unverschlüsselt)
+    private String password;   // Passwort (wird beim speichern verschlüsselt)
 
     //Konstruktor:
     public Entry(String service, String username, String password){
