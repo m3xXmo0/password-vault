@@ -69,4 +69,13 @@ class VaultStorageTest {
         Vault loaded = VaultStorage.load(file, "master".toCharArray());
         assertEquals(0, loaded.getEntries().size());
     }
+
+    @Test
+    void fileShorterThanHeaderIsRejected() throws Exception {
+        Path file = tempDir.resolve("vault.dat");
+        Files.writeString(file, java.util.Base64.getEncoder().encodeToString(new byte[20]));
+
+        assertThrows(VaultException.class,
+                () -> VaultStorage.load(file, "master".toCharArray()));
+    }
 }

@@ -52,7 +52,7 @@ public class VaultStorage {
         }
         try {
             byte[] data = Base64.getDecoder().decode(Files.readString(file).trim());
-            if (data.length < CryptoService.SALT_LENGTH) {
+            if (data.length < CryptoService.SALT_LENGTH + CryptoService.NONCE_LENGTH + CryptoService.TAG_LENGTH) {
                 throw new VaultException("Die Tresor-Datei ist beschädigt (zu kurz)");
             }
             byte[] salt = Arrays.copyOfRange(data, 0, CryptoService.SALT_LENGTH);
