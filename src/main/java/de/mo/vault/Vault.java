@@ -20,6 +20,10 @@ public class Vault {
         if (entry == null){
             throw new IllegalArgumentException("Eintrag darf nicht null sein");
         }
+        if (entry.getService().contains("\t") || entry.getUsername().contains("\t")
+                || entry.getPassword().contains("\t")) {
+            throw new IllegalArgumentException("Eingaben dürfen keine Tabulatoren enthalten");
+        }
         if (findByService(entry.getService()) != null) {
             throw new IllegalArgumentException("Dienst existiert bereits: " + entry.getService());
         }
