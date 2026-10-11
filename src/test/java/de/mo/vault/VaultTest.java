@@ -28,4 +28,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
             assertThrows(IllegalArgumentException.class,
                     () -> vault.add(new Entry("github", "x", "y")));
         }
+        @Test
+        void entryWithTabIsRejected() {
+            Vault vault = new Vault();
+            assertThrows(IllegalArgumentException.class,
+                    () -> vault.add(new Entry("Git\thub", "mo", "pw")));
+        }
 }
