@@ -78,4 +78,15 @@ class VaultStorageTest {
         assertThrows(VaultException.class,
                 () -> VaultStorage.load(file, "master".toCharArray()));
     }
+    @Test
+    void entryWithEmptyPasswordSurvivesSaveAndLoad() throws Exception {
+        Path file = tempDir.resolve("vault.dat");
+        Vault vault = new Vault();
+        vault.add(new Entry("Mail", "mo", ""));
+
+        VaultStorage.save(vault, file, "master".toCharArray());
+        Vault loaded = VaultStorage.load(file, "master".toCharArray());
+
+        assertEquals(1, loaded.getEntries().size());
+    }
 }

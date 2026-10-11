@@ -61,7 +61,7 @@ public class VaultStorage {
             SecretKey key = CryptoService.deriveKey(password, salt);
             String plaintext = CryptoService.decrypt(encrypted, key);
             for (String line : plaintext.split("\n")) {
-                String[] parts = line.split("\t");
+                String[] parts = line.split("\t", -1);
                 if (parts.length == 3) {
                     vault.add(new Entry(parts[0], parts[1], parts[2]));
                 }
