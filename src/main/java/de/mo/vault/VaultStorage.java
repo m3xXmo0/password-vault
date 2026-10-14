@@ -51,7 +51,12 @@ public class VaultStorage {
             return vault;
         }
         try {
-            byte[] data = Base64.getDecoder().decode(Files.readString(file).trim());
+            byte[] data;
+            try {
+                data = Base64.getDecoder().decode(Files.readString(file).trim());
+            } catch (IllegalArgumentException e) {
+                throw new VaultException("Die Tresor-Datei ist beschädigt (kein gültiges Base64)");
+            }
             if (data.length < CryptoService.SALT_LENGTH + CryptoService.NONCE_LENGTH + CryptoService.TAG_LENGTH) {
                 throw new VaultException("Die Tresor-Datei ist beschädigt (zu kurz)");
             }
@@ -63,13 +68,15 @@ public class VaultStorage {
             for (String line : plaintext.split("\n")) {
                 String[] parts = line.split("\t", -1);
                 if (parts.length == 3) {
-                    vault.add(new Entry(parts[0], parts[1], parts[2]));
+                    try {
+                        vault.add(new Entry(parts[0], parts[1], parts[2]));
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("Warnung: Eintrag übersprungen: " + e.getMessage());
+                    }
                 }
             }
         } catch (AEADBadTagException e) {
             throw new VaultException("Falsches Master-Passwort oder manipulierte Datei");
-        } catch (IllegalArgumentException e) {
-            throw new VaultException("Die Tresor-Datei ist beschädigt (kein gültiges Base64)");
         } catch (GeneralSecurityException e) {
             throw new VaultException("Entschlüsselung fehlgeschlagen: " + e.getMessage());
         }
