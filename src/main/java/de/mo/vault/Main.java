@@ -37,10 +37,11 @@ public class Main {
         while(running){
             System.out.println();
             System.out.println("1) Alle Einträge anzeigen");
-            System.out.println("2) Eintrag hinzufügen");
-            System.out.println("3) Eintrag löschen");
-            System.out.println("4) Master-Passwort ändern");
-            System.out.println("5) Beenden");
+            System.out.println("2) Passwort anzeigen");
+            System.out.println("3) Eintrag hinzufügen");
+            System.out.println("4) Eintrag löschen");
+            System.out.println("5) Master-Passwort ändern");
+            System.out.println("6) Beenden");
             System.out.print("Auswahl: ");
             String input = scanner.nextLine();
 
@@ -49,8 +50,17 @@ public class Main {
                     for(Entry entry : vault.getEntries()){
                         System.out.println(entry);
                     } break;
-
                 case "2":
+                    System.out.print("Dienst: ");
+                    Entry found = vault.findByService(scanner.nextLine());
+                    if (found == null) {
+                        System.out.println("Nicht gefunden");
+                    } else {
+                        System.out.println("Passwort: " + found.getPassword());
+                    }
+                    break;
+
+                case "3":
                     System.out.print("Dienst: ");
                     String service = scanner.nextLine();
 
@@ -76,7 +86,7 @@ public class Main {
                     System.out.println("Eintrag gespeichert");
                     break;
 
-                case "3":
+                case "4":
                     System.out.print("Dienst, der gelöscht werden soll: ");
                     String serviceDelete = scanner.nextLine();
                     if(vault.removeByService(serviceDelete)){
@@ -87,7 +97,7 @@ public class Main {
                     }
                     break;
 
-                case "4":
+                case "5":
                     System.out.print("Aktuelles Master-Passwort: ");
                     char[] current = scanner.nextLine().toCharArray();
                     if (!Arrays.equals(current, masterPassword)) {
@@ -107,7 +117,7 @@ public class Main {
                     System.out.println("Master-Passwort geändert.");
                     break;
 
-                case "5":
+                case "6":
                     running = false;
                     break;
 
