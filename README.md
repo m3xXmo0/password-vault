@@ -41,10 +41,11 @@ In der IDE Rechtsklick auf `src/test/java`, dann **Run 'All Tests'**.
 
 ```
 1) Alle Einträge anzeigen
-2) Eintrag hinzufügen
-3) Eintrag löschen
-4) Master-Passwort ändern
-5) Beenden
+2) Passwort anzeigen
+3) Eintrag hinzufügen
+4) Eintrag löschen
+5) Master-Passwort ändern
+6) Beenden
 ```
 
 ## Bedrohungsmodell
@@ -153,10 +154,11 @@ In your IDE, right-click on `src/test/java` and select **Run 'All Tests'**.
 
 ## Menu
     1) View all entries
-    2) Add entry
-    3) Delete entry
-    4) Change master password
-    5) Exit
+    2) Show password
+    3) Add entry
+    4) Delete entry
+    5) Change master password
+    6) Exit
 
 ## Threat Model
 
