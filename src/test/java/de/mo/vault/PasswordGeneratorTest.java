@@ -21,15 +21,18 @@ class PasswordGeneratorTest {
         boolean hasLower = false;
         boolean hasUpper = false;
         boolean hasDigit = false;
+        boolean hasSymbol = false;
         for (char c : password.toCharArray()) {
             if (Character.isLowerCase(c)) hasLower = true;
             if (Character.isUpperCase(c)) hasUpper = true;
             if (Character.isDigit(c)) hasDigit = true;
+            if ("!@#$%^&*()-_=+?".indexOf(c) >= 0) hasSymbol = true;
         }
 
         assertTrue(hasLower);
         assertTrue(hasUpper);
         assertTrue(hasDigit);
+        assertTrue(hasSymbol);
     }
 
     @Test
